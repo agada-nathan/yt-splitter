@@ -1,4 +1,4 @@
-pip>=25.1.1
+
 setuptools==59.6.0
 numpy==1.18.5
 spleeter==2.3.0
