@@ -32,7 +32,7 @@ def split_song(song_name, artist):
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
-        'cookiefile': 'cookies.txt',
+        # 'cookiefile': 'cookies.txt',
         'outtmpl': os.path.join(download_dir, f'{song_name} - {artist}.%(ext)s'),
     }
 
