@@ -1,5 +1,5 @@
 pip>=25.1.1
-setuptools==65.5.1
+setuptools==59.6.0
 build
 ytmusicapi==1.10.3
 yt-dlp==2025.6.30
