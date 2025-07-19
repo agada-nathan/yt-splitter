@@ -1,13 +1,13 @@
 
-setuptools>=65.5.1
+setuptools==65.5.1
 build
-ytmusicapi=1.10.3
-yt-dlp=2025.6.30
-ffmpeg-python=0.2.0
+ytmusicapi==1.10.3
+yt-dlp==2025.6.30
+ffmpeg-python==0.2.0
 wheel
-spleeter=2.1.0
-librosa=0.11.0
-fastapi=0.110.0
-typing_extensions=4.5.0
-uvicorn=0.23.2
-numpy=1.24.3
+spleeter==2.1.0
+librosa==0.11.0
+fastapi==0.110.0
+typing_extensions==4.5.0
+uvicorn==0.23.2
+numpy==1.24.3
