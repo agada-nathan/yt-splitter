@@ -1,13 +1,13 @@
 
 setuptools>=65.5.1
-wheel
 build
-numpy==2.3.1 --only-binary=:all:
 
 fastapi
 uvicorn[standard]
 ytmusicapi
 yt-dlp
-spleeter==2.3.0
+spleeter==2.4.2
 ffmpeg-python
+setuptools>=65.5.1
+wheel
 
