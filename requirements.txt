@@ -4,16 +4,16 @@ build
 
 
 
-ytmusicapi
-yt-dlp
+ytmusicapi==1.10.3
+yt-dlp==2025.6.30
 
-ffmpeg-python
-setuptools>=65.5.1
+ffmpeg-python==0.2.0
+setuptools>==65.5.1
 wheel
 
 spleeter==2.1.0
-librosa==0.8.1
+librosa==0.11.0
 fastapi==0.110.0
-typing_extensions==4.9.0
+typing_extensions==4.5.0
 uvicorn==0.23.2
-numpy==1.21.1
+numpy==1.24.3
