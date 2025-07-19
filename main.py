@@ -66,7 +66,7 @@ async def split_with_cookies(
         with open(cookies_path, "wb") as f:
             shutil.copyfileobj(cookies_file.file, f)
 
-        split_song(song_name, artist, cookies_path)
+        output_song_name = split_song(song_name, artist, cookies_path)  # ✅ returned name
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -74,8 +74,7 @@ async def split_with_cookies(
         if os.path.exists(cookies_path):
             os.remove(cookies_path)
 
-    song_dir = f"{song_name} - {artist}"
-    base_path = os.path.join("Split_songs", song_dir)
+    base_path = os.path.join("Split_songs", output_song_name)
 
     vocals_path = os.path.join(base_path, "vocals.mp3")
     accompaniment_path = os.path.join(base_path, "accompaniment.mp3")
@@ -84,29 +83,8 @@ async def split_with_cookies(
         raise HTTPException(status_code=500, detail="Separation failed")
 
     return {
-        "vocals": f"/vocals?song={song_dir}",
-        "accompaniment": f"/accompaniment?song={song_dir}"
-    }
-
-@app.get("/split")
-def split(song_name: str = Query(...), artist: str = Query(...)):
-    try:
-        split_song(song_name, artist)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-    song_dir = f"{song_name} - {artist}"
-    base_path = os.path.join("Split_songs", song_dir)
-
-    vocals_path = os.path.join(base_path, "vocals.mp3")
-    accompaniment_path = os.path.join(base_path, "accompaniment.mp3")
-
-    if not os.path.exists(vocals_path) or not os.path.exists(accompaniment_path):
-        raise HTTPException(status_code=500, detail="Separation failed")
-
-    return {
-        "vocals": f"/vocals?song={song_dir}",
-        "accompaniment": f"/accompaniment?song={song_dir}"
+        "vocals": f"/vocals?song={output_song_name}",
+        "accompaniment": f"/accompaniment?song={output_song_name}"
     }
 
 @app.get("/vocals")
