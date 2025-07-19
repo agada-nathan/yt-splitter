@@ -6,7 +6,7 @@ fastapi
 uvicorn[standard]
 ytmusicapi
 yt-dlp
-spleeter==2.4.2
+spleeter
 ffmpeg-python
 setuptools>=65.5.1
 wheel
