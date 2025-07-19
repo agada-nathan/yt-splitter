@@ -1,4 +1,3 @@
-
 services:
   - type: web
     name: yt-splitter
@@ -9,3 +8,5 @@ services:
     envVars:
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: PYTHON_VERSION
+        value: "3.10"
