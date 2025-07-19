@@ -1,15 +1,15 @@
 
-from fastapi import FastAPI, Query, HTTPException
+from fastapi import FastAPI, Query, HTTPException, File, Form, UploadFile
 from fastapi.responses import FileResponse
 from ytmusicapi import YTMusic
 from spleeter.separator import Separator
 import yt_dlp
-
 import os
+import shutil
 
 app = FastAPI()
 
-def split_song(song_name, artist):
+def split_song(song_name, artist, cookies_path=None):
     yt = YTMusic()
     separator = Separator('spleeter:2stems')
     search_results = yt.search(f'{song_name} - {artist}', filter="songs")
@@ -31,19 +31,18 @@ def split_song(song_name, artist):
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
-        # 'cookiefile': 'cookies.txt',
         'outtmpl': os.path.join(download_dir, f'{song_name} - {artist}.%(ext)s'),
     }
 
+    if cookies_path:
+        ydl_opts['cookiefile'] = cookies_path
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info_dict = ydl.extract_info(video_url, download=True)
         print(f"Downloaded {song_name} - {artist}.mp3")
 
-    # Construct the actual downloaded file path
-    downloaded_file_name = ydl.prepare_filename(info_dict).replace('.webm', '.mp3') # yt-dlp might download as webm first
+    downloaded_file_name = ydl.prepare_filename(info_dict).replace('.webm', '.mp3')
     audio_path = os.path.join(download_dir, os.path.basename(downloaded_file_name))
-
 
     output_dir = 'Split_songs'
     if not os.path.exists(output_dir):
@@ -51,13 +50,43 @@ def split_song(song_name, artist):
 
     separator.separate_to_file(audio_path, output_dir, codec='mp3')
 
-
-    # Display the separated audio files
-
     output_song_name = os.path.splitext(os.path.basename(audio_path))[0]
     vocals_path = os.path.join(output_dir, output_song_name, 'vocals.mp3')
     accompaniment_path = os.path.join(output_dir, output_song_name, 'accompaniment.mp3')
-    
+
+
+@app.post("/split")
+async def split_with_cookies(
+    song_name: str = Form(...),
+    artist: str = Form(...),
+    cookies_file: UploadFile = File(...)
+):
+    cookies_path = f"/tmp/{cookies_file.filename}"
+    try:
+        with open(cookies_path, "wb") as f:
+            shutil.copyfileobj(cookies_file.file, f)
+
+        split_song(song_name, artist, cookies_path)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if os.path.exists(cookies_path):
+            os.remove(cookies_path)
+
+    song_dir = f"{song_name} - {artist}"
+    base_path = os.path.join("Split_songs", song_dir)
+
+    vocals_path = os.path.join(base_path, "vocals.mp3")
+    accompaniment_path = os.path.join(base_path, "accompaniment.mp3")
+
+    if not os.path.exists(vocals_path) or not os.path.exists(accompaniment_path):
+        raise HTTPException(status_code=500, detail="Separation failed")
+
+    return {
+        "vocals": f"/vocals?song={song_dir}",
+        "accompaniment": f"/accompaniment?song={song_dir}"
+    }
 
 @app.get("/split")
 def split(song_name: str = Query(...), artist: str = Query(...)):
