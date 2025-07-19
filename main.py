@@ -4,7 +4,6 @@ from fastapi.responses import FileResponse
 from ytmusicapi import YTMusic
 from spleeter.separator import Separator
 import yt_dlp
-from IPython.display import Audio
 
 import os
 
@@ -52,17 +51,13 @@ def split_song(song_name, artist):
 
     separator.separate_to_file(audio_path, output_dir, codec='mp3')
 
-    print(f"Audio separated and saved to {output_dir}")
 
     # Display the separated audio files
 
     output_song_name = os.path.splitext(os.path.basename(audio_path))[0]
     vocals_path = os.path.join(output_dir, output_song_name, 'vocals.mp3')
     accompaniment_path = os.path.join(output_dir, output_song_name, 'accompaniment.mp3')
-    print(f"Vocals: {vocals_path}")
-    display(Audio(vocals_path))
-    print(f"Accompaniment: ")
-    display(Audio(accompaniment_path))
+    
 
 @app.get("/split")
 def split(song_name: str = Query(...), artist: str = Query(...)):
