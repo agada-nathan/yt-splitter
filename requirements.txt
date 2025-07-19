@@ -1,4 +1,7 @@
 
+setuptools>=65.5.1
+wheel
+build
 numpy==1.24.4
 fastapi
 uvicorn[standard]
