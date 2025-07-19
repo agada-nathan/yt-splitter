@@ -2,7 +2,7 @@
 setuptools
 numpy
 spleeter
-
+python-multipart
 build
 ytmusicapi
 yt-dlp
